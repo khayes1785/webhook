@@ -13,7 +13,7 @@ const confirmationFile = "./confirmation.json";
 app.post("/send-confirmation", async (req, res) => {
   const { email, userId } = req.body;
   const token = uuidv4();
-  const confirmUrl = `https://your-deployment-url.com/confirm/${token}`;
+  const confirmUrl = `https://webhook-go4h.onrender.com/confirm/${token}`;
 
   // Store token
   let confirmations = {};
