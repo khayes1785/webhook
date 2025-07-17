@@ -62,5 +62,24 @@ app.get("/confirm/:token", (req, res) => {
   }
 });
 
+// Route: GET /status/:userId
+app.get("/status/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  // Read existing confirmations
+  if (!fs.existsSync(confirmationFile)) {
+    return res.status(404).json({ confirmed: false });
+  }
+
+  const confirmations = JSON.parse(fs.readFileSync(confirmationFile));
+  const matched = Object.values(confirmations).find(entry => entry.userId === userId);
+
+  if (matched) {
+    return res.json({ confirmed: matched.confirmed });
+  } else {
+    return res.status(404).json({ confirmed: false });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
