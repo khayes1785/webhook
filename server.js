@@ -13,7 +13,7 @@ const confirmationFile = "./confirmation.json";
 app.post("/send-confirmation", async (req, res) => {
   const { email, userId, furnitureType, furnitureCondition, furnitureColor, furnitureBudget, furnitureStyle } = req.body; // updating in order to fill in order details
   const token = uuidv4();
-  const confirmUrl = `https://webhook-go4h.onrender.com/confirm/${token}`;
+  const confirmUrl = `https://webhook-go4h.onrender.com/confirm/${token}?conversationId=${userId}`; //update to confirmation address
 
   // Store token
   let confirmations = {};
@@ -47,7 +47,7 @@ app.post("/send-confirmation", async (req, res) => {
         <li><strong>Condition:</strong> ${furnitureCondition}</li>
         <li><strong>Budget:</strong> ${furnitureBudget} €</li>
       </ul>
-  
+
       <p>To confirm, click the link below:</p>
       <p><a href="${confirmUrl}">✅ Confirm My Order</a></p>
   
@@ -68,33 +68,24 @@ app.post("/send-confirmation", async (req, res) => {
 // Confirmation route
 app.get("/confirm/:token", (req, res) => {
   const { token } = req.params;
+  const { conversationId } = req.query; // this is user.id
+
+  // Read the confirmation file (create it if it doesn't exist)
+  if (!fs.existsSync(confirmationFile)) {
+    return res.status(404).send("❌ No confirmation data found.");
+  }
+
   let confirmations = JSON.parse(fs.readFileSync(confirmationFile));
 
   if (confirmations[token]) {
     confirmations[token].confirmed = true;
+    confirmations[token].conversationId = conversationId || confirmations[token].conversationId || null;
+
     fs.writeFileSync(confirmationFile, JSON.stringify(confirmations, null, 2));
-    return res.send("✅ Email confirmed successfully!");
+
+    return res.send("✅ Email confirmed successfully. You may return to the chatbot.");
   } else {
     return res.status(400).send("❌ Invalid confirmation token.");
-  }
-});
-
-// Route: GET /status/:userId
-app.get("/status/:userId", (req, res) => {
-  const { userId } = req.params;
-
-  // Read existing confirmations
-  if (!fs.existsSync(confirmationFile)) {
-    return res.status(404).json({ confirmed: false });
-  }
-
-  const confirmations = JSON.parse(fs.readFileSync(confirmationFile));
-  const matched = Object.values(confirmations).find(entry => entry.userId === userId);
-
-  if (matched) {
-    return res.json({ confirmed: matched.confirmed });
-  } else {
-    return res.status(404).json({ confirmed: false });
   }
 });
 
