@@ -11,7 +11,7 @@ const confirmationFile = "./confirmation.json";
 
 // Send email route
 app.post("/send-confirmation", async (req, res) => {
-  const { email, userId } = req.body;
+  const { email, userId, furnitureType, furnitureColor, furnitureBudget, furnitureStyle } = req.body; // updating in order to fill in order details
   const token = uuidv4();
   const confirmUrl = `https://webhook-go4h.onrender.com/confirm/${token}`;
 
@@ -32,11 +32,27 @@ app.post("/send-confirmation", async (req, res) => {
     }
   });
 
-  const mailOptions = {
+  const mailOptions = { //Updated email attachment to include order summary
     from: `"Zetinn Support" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: "Please confirm your email",
-    html: `<p>Click <a href="${confirmUrl}">here</a> to confirm your email address.</p>`
+    subject: "Please confirm your furniture order",
+    html: `
+      <p>Hi there,</p>
+      <p>Thank you for using Zetinn! Please confirm your order below:</p>
+      <h3>🪑 Your Furniture Request:</h3>
+      <ul>
+        <li><strong>Type:</strong> ${furnitureType}</li>
+        <li><strong>Color:</strong> ${color}</li>
+        <li><strong>Style:</strong> ${style}</li>
+        <li><strong>Budget:</strong> ${budget} €</li>
+      </ul>
+  
+      <p>To confirm, click the link below:</p>
+      <p><a href="${confirmUrl}">✅ Confirm My Order</a></p>
+  
+      <p>If you did not make this request, you can ignore this message.</p>
+      <p>– The Zetinn Team</p>
+    `
   };
 
   try {
