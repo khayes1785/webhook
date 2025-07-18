@@ -12,8 +12,8 @@ const confirmationFile = "./confirmation.json";
 // Send email route
 app.post("/send-confirmation", async (req, res) => {
   const { email, userId, furnitureType, furnitureCondition, furnitureColor, furnitureBudget, furnitureStyle } = req.body; // updating in order to fill in order details
-  const token = uuidv4();
-  const confirmUrl = `https://webhook-go4h.onrender.com/confirm/${token}?conversationId=${userId}`; //update to confirmation address
+  const token = test-token-123;
+  const confirmUrl = `http://localhost:${PORT}/confirm/${token}?conversationId=${user.id}`; //update to confirmation address
 
   // Store token
   let confirmations = {};
@@ -22,6 +22,12 @@ app.post("/send-confirmation", async (req, res) => {
   }
   confirmations[token] = { email, userId, confirmed: false };
   fs.writeFileSync(confirmationFile, JSON.stringify(confirmations, null, 2));
+
+  //Checking if it is writing to confirmation/json 
+  console.log("📝 Saving confirmation for token:", token);
+  console.log("➡️ Confirmation entry:", confirmations[token]);
+  fs.writeFileSync(confirmationFile, JSON.stringify(confirmations, null, 2));
+  console.log("✅ confirmation.json updated.");
 
   // Send email
   const transporter = nodemailer.createTransport({
@@ -58,7 +64,10 @@ app.post("/send-confirmation", async (req, res) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    res.send({ success: true, message: "Confirmation email sent." });
+    return res.json({
+  success: true,
+  confirmationUrl: `http://localhost:${PORT}/confirm/${token}?conversationId=${user.id}`
+});
   } catch (error) {
     console.error("Error sending email:", error);
     res.status(500).send({ success: false });
