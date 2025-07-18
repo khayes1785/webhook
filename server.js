@@ -42,10 +42,10 @@ app.post("/send-confirmation", async (req, res) => {
       <h3>🪑 Your Furniture Request:</h3>
       <ul>
         <li><strong>Type:</strong> ${furnitureType}</li>
-        <li><strong>Color:</strong> ${color}</li>
-        <li><strong>Style:</strong> ${style}</li>
+        <li><strong>Color:</strong> ${furnitureColor}</li>
+        <li><strong>Style:</strong> ${furnitureStyle}</li>
         <li><strong>Condition:</strong> ${furnitureCondition}</li>
-        <li><strong>Budget:</strong> ${budget} €</li>
+        <li><strong>Budget:</strong> ${furnitureBudget} €</li>
       </ul>
   
       <p>To confirm, click the link below:</p>
