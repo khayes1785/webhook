@@ -11,7 +11,7 @@ const confirmationFile = "./confirmation.json";
 
 // Send email route
 app.post("/send-confirmation", async (req, res) => {
-  const { email, userId, furnitureType, furnitureColor, furnitureBudget, furnitureStyle } = req.body; // updating in order to fill in order details
+  const { email, userId, furnitureType, furnitureCondition, furnitureColor, furnitureBudget, furnitureStyle } = req.body; // updating in order to fill in order details
   const token = uuidv4();
   const confirmUrl = `https://webhook-go4h.onrender.com/confirm/${token}`;
 
@@ -44,6 +44,7 @@ app.post("/send-confirmation", async (req, res) => {
         <li><strong>Type:</strong> ${furnitureType}</li>
         <li><strong>Color:</strong> ${color}</li>
         <li><strong>Style:</strong> ${style}</li>
+        <li><strong>Condition:</strong> ${furnitureCondition}</li>
         <li><strong>Budget:</strong> ${budget} €</li>
       </ul>
   
