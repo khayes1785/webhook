@@ -9,6 +9,7 @@ app.use(express.json());
 
 const confirmationFile = "./confirmation.json";
 const PORT = process.env.PORT || 3000;
+const RENDER_BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
 // Send email route
 app.post("/send-confirmation", async (req, res) => {
@@ -23,7 +24,7 @@ app.post("/send-confirmation", async (req, res) => {
   } = req.body;
 
   const token = uuidv4(); // actually generate a token
-  const confirmUrl = `http://localhost:${PORT}/confirm/${token}?conversationId=${userId}`; // ✅ FIXED user.id -> userId
+  const confirmUrl = `${RENDER_BASE_URL}/confirm/${token}?conversationId=${userId}`; 
 
   // Store token
   let confirmations = {};
@@ -80,9 +81,10 @@ app.post("/send-confirmation", async (req, res) => {
 
   try {
     await transporter.sendMail(mailOptions);
+     // Respond with the confirmation URL
     return res.json({
       success: true,
-      confirmationUrl: confirmUrl // ✅ Send it in the response for testing
+      confirmationUrl: confirmUrl
     });
   } catch (error) {
     console.error("❌ Error sending email:", error);
