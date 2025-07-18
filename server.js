@@ -93,7 +93,7 @@ app.post("/send-confirmation", async (req, res) => {
 });
 
 // Confirmation route
-app.get("/confirm/:token", (req, res) => {
+app.get("/confirm/:token", async (req, res) => {
   const { token } = req.params;
   const { conversationId } = req.query;
 
@@ -108,11 +108,28 @@ app.get("/confirm/:token", (req, res) => {
     confirmations[token].conversationId = conversationId || confirmations[token].conversationId || null;
 
     fs.writeFileSync(confirmationFile, JSON.stringify(confirmations, null, 2));
+
+    // ✅ Send webhook to Botpress
+    const botpressWebhook = "https://webhook.botpress.cloud/9183af65-803a-407d-95ef-a839d0421759";
+    const payload = {
+      userId: confirmations[token].userId,
+      event: "email_confirmed",
+      email: confirmations[token].email
+    };
+
+    try {
+      await axios.post(botpressWebhook, payload);
+      console.log("✅ Webhook sent to Botpress");
+    } catch (error) {
+      console.error("❌ Failed to notify Botpress:", error.message);
+    }
+
     return res.send("✅ Email confirmed successfully. You may return to the chatbot.");
   } else {
     return res.status(400).send("❌ Invalid confirmation token.");
   }
 });
+
 
 // Status check route
 app.get("/status/:userId", (req, res) => {
