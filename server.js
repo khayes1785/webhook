@@ -19,9 +19,10 @@ app.post("/send-confirmation", async (req, res) => {
     userId,
     furnitureType,
     furnitureCondition,
-    furnitureColor,
+    preferredRoom,
     furnitureBudget,
-    furnitureStyle
+    furnitureStyle,
+    timeline
   } = req.body;
 
   const token = uuidv4(); // actually generate a token
@@ -65,13 +66,13 @@ app.post("/send-confirmation", async (req, res) => {
     html: `
       <p>Hi there,</p>
       <p>Thank you for using Zetinn! Please confirm your order below:</p>
-      <h3>🪑 Your Furniture Request:</h3>
+      <h3>🪑 Your Personal Furniture Brief:</h3>
       <ul>
-        <li><strong>Type:</strong> ${furnitureType}</li>
-        <li><strong>Color:</strong> ${furnitureColor}</li>
-        <li><strong>Style:</strong> ${furnitureStyle}</li>
-        <li><strong>Condition:</strong> ${furnitureCondition}</li>
+        <li><strong>Looking For A:</strong> ${furnitureStyle}</li></strong> ${furnitureType}</li>
+        <li><strong>For Your:</strong> ${preferredRoom}</li>
+        <li><strong>Preference:</strong> ${furnitureCondition}</li>
         <li><strong>Budget:</strong> ${furnitureBudget} €</li>
+        <li><strong>Timeline:</strong> ${timeline} €</li>
       </ul>
       <p>To confirm, click the link below:</p>
       <p><a href="${confirmUrl}">✅ Confirm My Order</a></p>
