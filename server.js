@@ -72,7 +72,7 @@ app.post("/send-confirmation", async (req, res) => {
         <li><strong>For Your:</strong> ${preferredRoom}</li>
         <li><strong>Preference:</strong> ${furnitureCondition}</li>
         <li><strong>Budget:</strong> ${furnitureBudget} €</li>
-        <li><strong>Timeline:</strong> ${timeline} €</li>
+        <li><strong>Timeline:</strong> ${timeline} </li>
       </ul>
       <p>To confirm, click the link below:</p>
       <p><a href="${confirmUrl}">✅ Confirm My Order</a></p>
