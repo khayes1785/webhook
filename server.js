@@ -19,7 +19,6 @@ app.post("/send-confirmation", async (req, res) => {
     userId,
     furnitureType,
     furnitureCondition,
-    preferredRoom,
     furnitureBudget,
     furnitureStyle,
     timeline
@@ -69,7 +68,6 @@ app.post("/send-confirmation", async (req, res) => {
       <h3>🪑 Your Personal Furniture Brief:</h3>
       <ul>
         <li><strong>Looking For A:</strong> ${furnitureStyle}</li></strong> ${furnitureType}</li>
-        <li><strong>For Your:</strong> ${preferredRoom}</li>
         <li><strong>Preference:</strong> ${furnitureCondition}</li>
         <li><strong>Budget:</strong> ${furnitureBudget} €</li>
         <li><strong>Timeline:</strong> ${timeline} </li>
